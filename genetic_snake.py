@@ -2,6 +2,8 @@ import argparse
 import sys
 import logging
 
+import numpy as np
+
 from evolver import Evolver
 from tqdm import tqdm
 import gym
@@ -119,11 +121,11 @@ def main():
     args = parser.parse_args()
 
     all_possible_genes = {
-        'nb_neurons': [16, 32, 64, 128],
-        'nb_layers':  [2, 3, 4, 5],
         'activation': ['relu', 'elu', 'tanh', 'sigmoid', 'hard_sigmoid','softplus','linear'],
         'optimizer':  ['rmsprop', 'adam', 'sgd', 'adagrad','adadelta', 'adamax', 'nadam']
     }
+    all_possible_genes['nb_neurons'] = np.arange(2, 128)
+    all_possible_genes['nb_layers'] = np.arange(2, 5)
 
     generate(args.generations, args.population, all_possible_genes, args.env_id, args.episodes)
 
