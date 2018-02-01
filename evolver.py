@@ -92,7 +92,7 @@ class Evolver():
     @staticmethod
     def fitness(genome):
         """Return the accuracy, which is our fitness function."""
-        return genome.accuracy
+        return genome.total_score
 
     def grade(self, pop):
         """Find average fitness for a population.
