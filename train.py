@@ -78,7 +78,7 @@ def train_and_score(geneparam, genehash, env_id, episodes):
             state = next_state
 
             if done:
-                print("episode: {}/{}".format(e, episodes))
+                print("episode: {}/{}\tlast reward: {} e: {:.2}".format(e, episodes, reward, agent.epsilon))
                 break
 
         if len(agent.memory) > batch_size:

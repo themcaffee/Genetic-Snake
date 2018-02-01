@@ -37,7 +37,7 @@ class AllGenomes():
         
         for i in range(0,len(self.population)):
             if (genome.hash == self.population[i].hash):
-                self.population[i].accuracy = genome.accuracy
+                self.population[i].total_score = genome.total_score
                 return
     
         logging.info("set_accuracy() ERROR: Genome not found")

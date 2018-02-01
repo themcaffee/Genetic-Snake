@@ -124,8 +124,8 @@ def main():
         'activation': ['relu', 'elu', 'tanh', 'sigmoid', 'hard_sigmoid','softplus','linear'],
         'optimizer':  ['rmsprop', 'adam', 'sgd', 'adagrad','adadelta', 'adamax', 'nadam']
     }
-    all_possible_genes['nb_neurons'] = np.arange(2, 128)
-    all_possible_genes['nb_layers'] = np.arange(2, 5)
+    all_possible_genes['nb_neurons'] = list(range(2, 128))
+    all_possible_genes['nb_layers'] = list(range(2, 5))
 
     generate(args.generations, args.population, all_possible_genes, args.env_id, args.episodes)
 

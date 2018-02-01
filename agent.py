@@ -1,9 +1,9 @@
 from collections import deque
 import random
+from pprint import pprint
 
 from keras.layers import Dense, np, Dropout
 from keras.models import Sequential
-from keras.optimizers import Adam
 
 
 class DQNAgent(object):
