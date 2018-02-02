@@ -65,7 +65,7 @@ class DQNAgent(object):
             return random.randrange(self.action_size)
         state = self._reshape_state(state)
         act_values = self.model.predict(state)
-        return np.argmin(act_values[0])  # returns action
+        return np.argmax(act_values[0])  # returns action
 
     def replay(self):
         minibatch = random.sample(self.memory, self.batch_size)

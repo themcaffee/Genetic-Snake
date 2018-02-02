@@ -78,9 +78,8 @@ def train_and_score(geneparam, genehash, env_id, episodes):
 
             if done:
                 avg_score = total_score / (e + 1)
-                episode_score = episode_total / current_time
                 print("episode: {}/{}, total_score: {}, avg_score: {}, episode_score: {}, e: {:.2}".format(
-                    e, episodes, total_score, avg_score, episode_score, agent.epsilon))
+                    e, episodes, total_score, avg_score, episode_total, agent.epsilon))
                 break
 
         if len(agent.memory) > agent.batch_size:
