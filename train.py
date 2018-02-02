@@ -51,45 +51,40 @@ def train_and_score(geneparam, genehash, env_id, episodes):
     env.seed(0)
 
     # Setup the agent
-    state_size = 1
-    for i in range(len(env.observation_space.shape)):
-        pprint(i)
-        state_size *= env.observation_space.shape[i]
-        pprint(state_size)
     action_size = env.action_space.n
-    agent = DQNAgent(state_size, action_size, geneparam)
+    state_height = env.observation_space.shape[0]
+    state_width = env.observation_space.shape[1]
+    state_channels = env.observation_space.shape[2]
+    agent = DQNAgent(state_height, state_width, state_channels, action_size, geneparam)
 
     # Run the simulation
     total_score = 0
-    reward = 0
-    done = False
-    batch_size = 32
 
     for e in range(episodes):
         state = env.reset()
-        # pprint(state)
-        state = np.reshape(state, [1, state_size])
+        episode_total = 0
+        current_time = 0
         while True:
             action = agent.act(state)
-            # pprint(action)
             next_state, reward, done, _ = env.step(action)
             reward = reward if not done else -10
+            current_time += 1
+            episode_total += reward
             total_score += reward
-            next_state = np.reshape(next_state, [1, state_size])
 
             # Remember the previous state, action, reward, and done
             agent.remember(state, action, reward, next_state, done)
             state = next_state
 
             if done:
-                agent.update_target_model()
                 avg_score = total_score / (e + 1)
-                print("episode: {}/{}\ttotal_score: {}\tavg_score: {}\te: {:.2}".format(
-                    e, episodes, total_score, avg_score, agent.epsilon))
+                episode_score = episode_total / current_time
+                print("episode: {}/{}, total_score: {}, avg_score: {}, episode_score: {}, e: {:.2}".format(
+                    e, episodes, total_score, avg_score, episode_score, agent.epsilon))
                 break
 
-        if len(agent.memory) > batch_size:
-            agent.replay(batch_size)
+        if len(agent.memory) > agent.batch_size:
+            agent.replay()
 
     env.close()
 
