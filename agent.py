@@ -24,7 +24,7 @@ class DQNAgent(object):
         self.batch_size = 32
         self.model = self._build_model(self.geneparam)
 
-    def _build_model(self, gene_param):
+    def _build_old_model(self, gene_param):
         nb_layers = len(gene_param)
 
         # Neural Net for Deep-Q learning Model
@@ -35,9 +35,9 @@ class DQNAgent(object):
             activation = gene_param['layers'][i]['activation']
 
             if i == 0:
-                model.add(Conv2D(nb_neurons, kernel_size=(3,3), activation=activation, input_shape=(self.state_height, self.state_width, self.state_channels)))
+                model.add(Conv2D(nb_neurons, kernel_size=(2,2), activation=activation, input_shape=(self.state_height, self.state_width, self.state_channels)))
             else:
-                model.add(Conv2D(nb_neurons, kernel_size=(3,3), activation=activation))
+                model.add(Conv2D(nb_neurons, kernel_size=(2,2), activation=activation))
 
             if i < 2:  # otherwise we hit zero
                 model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -54,11 +54,27 @@ class DQNAgent(object):
                       optimizer=Adam(lr=self.learning_rate))
         return model
 
+    def _build_model(self, gene_param):
+
+        # Neural Net for Deep-Q learning Model
+        model = Sequential()
+        model.add(Conv2D(24, kernel_size=(2,2), activation='relu', input_shape=(self.state_height, self.state_width, self.state_channels)))
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Conv2D(24, kernel_size=(2,2), activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Flatten())
+        model.add(Dense(24, activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Dense(self.action_size, activation='linear'))
+        model.compile(loss='mse',
+                      optimizer=Adam(lr=self.learning_rate))
+        return model
+
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
 
     def _reshape_state(self, state):
-        return np.reshape(state, (1, state.shape[0], state.shape[1], state.shape[2]))
+        return np.reshape(state, (1, state.shape[0], state.shape[1], 1))
 
     def act(self, state):
         if np.random.rand() <= self.epsilon:
