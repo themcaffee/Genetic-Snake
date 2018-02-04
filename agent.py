@@ -18,13 +18,13 @@ class DQNAgent(object):
         self.gamma = 0.95    # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.01
-        self.epsilon_decay = 0.99
+        self.epsilon_decay = 0.9998
         self.learning_rate = 0.001
         self.geneparam = geneparam
         self.batch_size = 32
         self.model = self._build_model(self.geneparam)
 
-    def _build_old_model(self, gene_param):
+    def _build_model(self, gene_param):
         nb_layers = len(gene_param)
 
         # Neural Net for Deep-Q learning Model
@@ -54,13 +54,13 @@ class DQNAgent(object):
                       optimizer=Adam(lr=self.learning_rate))
         return model
 
-    def _build_model(self, gene_param):
+    def _build_simple_model(self, gene_param):
 
         # Neural Net for Deep-Q learning Model
         model = Sequential()
-        model.add(Conv2D(24, kernel_size=(2,2), activation='relu', input_shape=(self.state_height, self.state_width, self.state_channels)))
+        model.add(Conv2D(24, kernel_size=(3, 3), activation='relu', input_shape=(self.state_height, self.state_width, self.state_channels)))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Conv2D(24, kernel_size=(2,2), activation='relu'))
+        model.add(Conv2D(24, kernel_size=(2, 2), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Flatten())
         model.add(Dense(24, activation='relu'))
